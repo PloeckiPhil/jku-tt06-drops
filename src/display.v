@@ -39,7 +39,6 @@ module display
 
 		if (e_disp) begin
 			d_disp <= 0;	
-			//$display(row_d);
 			if(clk_new == 12'b0 ) begin
 				if(row_d == 8) begin
 					d_disp <= 1;
@@ -47,14 +46,11 @@ module display
 					for(i = 0; i < gs; i= i+1)  begin
 						col_val[i] <= matrix_i[gs*row_d + i];
 					end
-					
-					
 					if(row_d == 0) begin
 						row_val <= ({{{( gs-1) {1'b1}} , 1'b0}});
 					end else begin
 						row_val <= {row_val[6:0], 1'b1};
 					end
-
 					row_d <= row_d + 1;
 				end
 			end
@@ -67,8 +63,6 @@ module display
 			row_d <= 0;
 			clk_new <= 0;
 		end
-
-
 	end
 	
 
