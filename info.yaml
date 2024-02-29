@@ -25,7 +25,7 @@ pinout:
   # Inputs
   ui[0]: "push button - right"
   ui[1]: "push button - left"
-  ui[2]: "push button - reset"
+  ui[2]: ""
   ui[3]: ""
   ui[4]: ""
   ui[5]: ""

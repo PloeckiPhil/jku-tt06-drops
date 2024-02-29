@@ -25,7 +25,7 @@ module display
 	reg d_disp;
 	reg [gs:0] row_d;
 	reg [11:0] clk_new;
-	integer i = 0;
+	integer i;
 	
 
 	// assign the counter value to the output
@@ -36,7 +36,7 @@ module display
 	
 	
 	always @ (posedge clk_i) begin
-
+		i = 0;
 		if (e_disp) begin
 			d_disp <= 0;	
 			if(clk_new == 12'b0 ) begin
