@@ -63,7 +63,6 @@ module tt_um_drops
 		// Input
 		.clk_i (clk) ,
 		.e_inp (e_inp) ,
-		.rst_i (reset) ,
 		.right_i(ui_in[0]),
 		.left_i(ui_in[1]),
 		// Output
@@ -95,7 +94,6 @@ module tt_um_drops
 			.clk_i ( clk ) ,
 			.matrix_i(matrix) ,
 			.e_disp(e_disp) ,
-			.rst_i (reset),
 			// Output
 			.col_val_o(uio_out) ,
 			.row_val_o(uo_out) ,
