@@ -2,7 +2,6 @@
 	Module to control output to an 8x8 segment display
 */
 
-`default_nettype none
 `ifndef __DISPLAY__
 `define __DISPLAY__
 
@@ -12,14 +11,14 @@ module display
 #(
 	parameter gs = 8 // optional parameter
 ) (
-	input clk_i ,
-	input [(gs*gs-1):0] matrix_i,
-	input e_disp ,
-	input rst_i,
+	input wire clk_i ,
+	input wire [(gs*gs-1):0] matrix_i,
+	input wire e_disp ,
+	input wire rst_i,
 
-	output [gs-1:0] col_val_o,
-	output [gs-1:0] row_val_o,	
-	output d_disp_o
+	output wire [gs-1:0] col_val_o,
+	output wire [gs-1:0] row_val_o,	
+	output wire d_disp_o
 );
 	
 	reg [gs-1:0] col_val;

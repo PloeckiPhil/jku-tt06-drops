@@ -9,7 +9,6 @@
  - deliver 1D array fot display
 */
 
-`default_nettype none
 `ifndef __ACTION__
 `define __ACTION__
 
@@ -20,15 +19,15 @@ module action
  parameter data_struct = 80'b01000000_00000100_00010000_00000001_10000000_00100000_00000010_00001000_10000000_00000100
 ) (
  	// input
-	input clk_i ,
-	input right_i,
-	input left_i,
-	input reset_i,
-	input e_act_i,
+	input wire clk_i ,
+	input wire right_i,
+	input wire left_i,
+	input wire reset_i,
+	input wire e_act_i,
 	
 	// output
-	output [gs*gs-1:0] matrix_o,
-	output d_act_o
+	output wire [gs*gs-1:0] matrix_o,
+	output wire d_act_o
 );
 	
 	reg [(gs*gs-1):0] matrix; //Matrix to store values

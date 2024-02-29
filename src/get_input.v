@@ -2,7 +2,6 @@
 	Module to catch left right input and prevent button bounce
 */
 
-`default_nettype none
 `ifndef __GETINPUT__
 `define __GETINPUT__
 
@@ -11,11 +10,11 @@ module get_input
  parameter cr_but = 4 // counter range to prevent button bounce
 ) (
  // define I /O ’ s of the module
- 	input clk_i , // clock
-	input e_inp ,
- 	input rst_i , // reset
- 	input right_i ,
- 	input left_i ,
+ 	input wire clk_i , // clock
+	input wire e_inp ,
+ 	input wire rst_i , // reset
+ 	input wire right_i ,
+ 	input wire left_i ,
 
 	output wire right_o,
 	output wire left_o,

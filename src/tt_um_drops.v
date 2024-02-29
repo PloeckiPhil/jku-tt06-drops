@@ -1,4 +1,3 @@
-`default_nettype none
 `ifndef __DROPS__
 `define __DROPS__
 
