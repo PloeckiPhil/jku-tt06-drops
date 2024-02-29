@@ -147,6 +147,3 @@ module tt_um_drops
     end
 
 endmodule
-
-`endif
-`default_nettype wire
