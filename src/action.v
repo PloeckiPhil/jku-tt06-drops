@@ -63,7 +63,7 @@ module action
 			life_counter <= 5; // --> by default 5 lifes
 			change_counter <= 0; // --> set to 0 --> First drop -> next run
 			bar_height <= {{( gs-1) {1'b0}} , 1'b1}; // always set bar to base 
-			pos_counter <= {{( 3) {1'b0}} , 1'b1};
+			pos_counter <= 1;
 			dead <= 1'b0;
 			d_act <= 1'b1; 
 

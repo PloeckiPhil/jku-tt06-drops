@@ -26,8 +26,8 @@ module display
 	reg d_disp;
 	reg [gs-1:0] row_d;
 	
-	reg i0; reg i1; reg i2; reg i3;	
-	reg i4; reg i5; reg i6;	reg i7;
+	//reg i0; reg i1; reg i2; reg i3;	
+	//reg i4; reg i5; reg i6;	reg i7;
 	
 	assign col_val_o = col_val;
 	assign row_val_o = ~row_val;
@@ -55,10 +55,10 @@ module display
 			row_d <= row_d + 1;
 			
 			//for debugging purposes
-			i0 <= matrix_i[gs*row_d + 0]; i1 <= matrix_i[gs*row_d + 1];
-			i2 <= matrix_i[gs*row_d + 2]; i3 <= matrix_i[gs*row_d + 3];
-			i4 <= matrix_i[gs*row_d + 4]; i5 <= matrix_i[gs*row_d + 5];
-			i6 <= matrix_i[gs*row_d + 6]; i7 <= matrix_i[gs*row_d + 7];
+			//i0 <= matrix_i[gs*row_d + 0]; i1 <= matrix_i[gs*row_d + 1];
+			//i2 <= matrix_i[gs*row_d + 2]; i3 <= matrix_i[gs*row_d + 3];
+			//i4 <= matrix_i[gs*row_d + 4]; i5 <= matrix_i[gs*row_d + 5];
+			//i6 <= matrix_i[gs*row_d + 6]; i7 <= matrix_i[gs*row_d + 7];
 			
 		end else begin
 			col_val <= {{( gs) {1'b0}}};
@@ -66,10 +66,10 @@ module display
 			row_d <= 0;
 			
 			//for debugging purposes
-			i0 <= 1; i1 <= 1;
-			i2 <= 1; i3 <= 1;
-			i4 <= 1; i5 <= 1;
-			i6 <= 1; i7 <= 1;
+			//i0 <= 1; i1 <= 1;
+			//i2 <= 1; i3 <= 1;
+			//i4 <= 1; i5 <= 1;
+			//i6 <= 1; i7 <= 1;
 			
 		end
 		end

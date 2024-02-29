@@ -1,5 +1,6 @@
 `ifndef __DROPS__
 `define __DROPS__
+`default_nettype none 
 
 `include "../src/get_input.v"
 `include "../src/action.v"
@@ -7,9 +8,7 @@
 
 
 module tt_um_drops 
-#( 
-parameter useless = 1
-) (
+(
     input  wire [7:0] ui_in,    // Dedicated inputs - connected to the input switches
     output wire [7:0] uo_out,   // Dedicated outputs - connected to the 7 segment display
     input  wire [7:0] uio_in,   // IOs: Bidirectional Input path
