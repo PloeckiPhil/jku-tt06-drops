@@ -2,9 +2,9 @@
 `ifndef __DROPS__
 `define __DROPS__
 
-`include "get_input.v"
-`include "action.v"
-`include "display.v"
+`include "../src/get_input.v"
+`include "../src/action.v"
+`include "../src/display.v"
 
 
 module tt_um_drops 
