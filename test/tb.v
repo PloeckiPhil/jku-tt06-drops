@@ -26,8 +26,8 @@ module tb ();
   wire [7:0] uio_oe;
 
   // Replace tt_um_example with your module name:
-  tt_um_flappy_bird 
-  	tt_um_flappy_bird_dut(
+  tt_um_drops 
+  	tt_um_drops_dut(
 
 	    // Include power ports for the Gate Level test:
 `ifdef GL_TEST
@@ -52,7 +52,7 @@ module tb ();
 	/* verilator lint_on STMTDLY */
 
 	initial begin
-		$dumpfile("tt_um_flappy_bird_tb.vcd");
+		$dumpfile("tt_um_drops_tb.vcd");
 		$dumpvars;
 
 		/* verilator lint_off STMTDLY */
