@@ -93,7 +93,6 @@ module tt_um_drops
 			.clk_i ( clk ) ,
 			.matrix_i(matrix) ,
 			.e_disp(e_disp) ,
-			.rst_i (reset),
 			// Output
 			.col_val_o(uio_out) ,
 			.row_val_o(uo_out) ,
