@@ -1,171 +1,159 @@
-
+/*
+ Module to implement the drop action
+ - Move bar left (Left input)
+ - Move bar right (Right input)
+ - create drop (random position in data_struct)
+ - sink drop every cr iterations
+ - count life if caught/ missed 
+ - set to kill screen if dead
+ - deliver 1D array fot display
+*/
 
 `ifndef __ACTION__
 `define __ACTION__
 
-
-
 module action
 #(
- parameter gs = 8, // optional parameter
+ parameter gs = 8, // grid size
  parameter cr = 2,  //change rate
- parameter beam_shemas = 56'b00111111_10011111_11001111_11100111_11110011_11111001_11111100
-
+ parameter data_struct = 80'b01000000_00000100_00010000_00000001_10000000_00100000_00000010_00001000_10000000_00000100
 ) (
- // define I /O ’ s of the module
-
+ 	// input
 	input wire clk_i ,
-	
-	input wire up_i,
-	
-	input wire down_i,
-	
+	input wire right_i,
+	input wire left_i,
 	input wire reset_i,
 	input wire e_act_i,
 	
-	output wire [gs*gs-1:0] matrix_o, //flatten matrix
+	// output
+	output wire [gs*gs-1:0] matrix_o,
 	output wire d_act_o
-	//output dead_o
- 	
 );
 	
-	reg [(gs*gs-1):0] matrix; //output Matrix memory
+	reg [(gs*gs-1):0] matrix; //Matrix to store values
 	
-	reg [(gs-1):0] bird_pos ; //bird position
-	reg [(gs*gs)-1:0] beam_matrix; //beam matrix
+	//Current bar position
+	reg [(gs-1):0] bar_pos ; 
+	reg [(gs-1):0] bar_height;
 	
-		
-	reg d_act; 		//used to disbale 
-	integer i = 0;
+	// Current drop position
+	reg [(gs-1):0] drop_pos ;
+	reg [(gs-1):0] drop_height ;
 	
-	integer alive_counter ;				//how many beams are passed
-	integer pos_counter ;
-	reg [3:0] change_counter ;			//shift beams to the left when overflow
-	reg [1:0] add_beam_counter ;		//add beam after 4 (overflow) beam shifts
-	reg [4:0] random_counter = 0; 		//randdom counter to select beam-shema 
+	reg [gs-1:0] life_counter; //count remaining lifes
+	reg [4:0] pos_counter; //next drop pos
+	reg [cr-1:0] change_counter; //sinking rate of drop (the smaller the faster)
 	
-	reg dead;		//player is dead
+	reg dead; //if true -> game over
+
+	reg d_act; //used to disbale 
 	
-	//assign dead_o = dead;				
+	
+	//assign outputs to storages
 	assign d_act_o = d_act;
 	assign matrix_o = matrix;
 	
 	
 	always @ (posedge clk_i) begin
+	// 1st case: reset
+		if(reset_i == 1'b1) begin //Initialize
+			bar_pos <= {1'b1 , {( gs-1) {1'b0}}}; //--> bar set to left corner
+			drop_pos <= 8'b0; //--> No drop			
+			drop_height <= 8'b0; //--> No drop
+			life_counter <= 5; // --> by default 5 lifes
+			change_counter <= 0; // --> set to 0 --> First drop -> next run
+			bar_height <= {{( gs-1) {1'b0}} , 1'b1}; // always set bar to base 
+			pos_counter <= 1;
+			dead <= 1'b0;
+			d_act <= 1'b1; 
 
-		if(reset_i) begin
-			dead <= 1'b1;
-			d_act <= 1'b1;			
-			//Spieler, beam_matrix, dead, d_act,  zurücksetzen
-			
-		end else begin	//Reset nicht gedrückt - Spieler bereit zu starten oder spielt
-			if(e_act_i) begin
-				if(dead) begin
-					if(up_i) begin
-						//startsequence
-						bird_pos <= ({{( (gs/2)-1) {1'b0}} , 1'b1, {( (gs/2)) {1'b0}}});
-						beam_matrix <= 64'b0;
-						//matrix <= 64'b0;
-						pos_counter <= 0;
-						add_beam_counter <= 0;	
-						change_counter <= 0;	
-						dead <= 1'b0;
-						alive_counter <= 0;					
-					end else begin
-						//Display calibration diagonal after reset
-						bird_pos <= {(gs){1'b0}};
-						beam_matrix <= 64'b10000000_01000000_00100000_00010000_00001000_00000100_00000010_00000001;
-						
+			// --> display only diagonal
+			//matrix <= {(gs*gs) {1'b0}};
+			for (integer i = 0; i < gs; i= i+1) begin
+					for (integer j = 0; j < gs; j= j+1) begin
+						if( i == j) matrix[i*gs + j] <= 1'b1;
+						else matrix[i*gs + j] <= 1'b0;
 					end
-					
-				end else begin
-					//in game
-					
-					//compute change of bird_pos
-					if(down_i) begin
-						if(bird_pos[0] != 1'b1) begin
-							bird_pos <= bird_pos >> 1;
-						end else begin
-							dead <= 1'b1;
-						end
-					end
-					
-					if(up_i) begin
-						if(bird_pos[gs-1] != 1'b1) begin
-							bird_pos <= bird_pos << 1;
-						end else begin
-							dead <= 1'b1;
-						end
-					end
-				
-
-					
-					//change beam_matrix & check if alive
-					if (change_counter == 0) begin
-						//timer has overflow -> change beam matrix
-						for (i = 0; i < gs*(gs-1); i = i+1) begin
-							beam_matrix[i] <= beam_matrix[i+gs];
-						end
-						//timer has overflow + 4 beam changes happend -> add_beam
-						if (add_beam_counter == 0) begin
-							for (i = 0; i < gs; i = i+1) begin
-								beam_matrix[gs*(gs-1)+i] <= beam_shemas[i + gs * random_counter];
-							end
-							
-							//check if bird_pos == beam -> dead == 1'b1 , else increas alive_counter 					
-							for(i = 0; i < gs; i = i+1) begin
-								if((bird_pos[i] == 1'b1) && (beam_matrix[i] == 1'b1)) begin
-									dead <= 1'b1;
-								end
-							end
-							if (dead == 1'b0) begin
-								alive_counter <= alive_counter + 1;
-							end
-						end else begin						
-							for (i = 0; i < gs; i = i+1) begin
-								beam_matrix[gs*(gs-1)+i] <= 1'b0;
-							end
-						end
-						add_beam_counter <= add_beam_counter + 1;
-						
-					end	
-					change_counter <= change_counter + 1; // increase change_counter for beam_matrix							
-						
-
-				end
-
-						
-				// compute matrix for display
-				for(i = 0 ; i < gs ; i = i+1) begin
-					matrix[i] <= bird_pos[i] + beam_matrix[i];
-				end
-				for(i = gs ; i < gs*gs ; i = i+1) begin
-					matrix[i] <= beam_matrix[i];
-				end				
-								
-				d_act <= 1'b1;
-			end else begin	//State not on display
-				//pos_counter is counter to randomly generate beams
-				if(random_counter >= 7) random_counter <=0;
-				else random_counter <= random_counter + 1;
 			end
+			
+		end else begin
+		// 2nd case: dead
+			if (dead == 1'b1) begin
+				//Send a cross to the output screen
+				for (integer i = 0; i < gs; i= i+1) begin
+					for (integer j = 0; j < gs; j= j+1) begin
+						if( i == j) matrix[i*gs + j] <= 1'b1;
+						else if((gs-1-i) == j) matrix[i*gs + j] <= 1'b1;
+						else matrix[i*gs + j] <= 1'b0;
+					end
+				end
+			end else begin
+		// 3rd case: enabled
+				if (e_act_i == 1'b1) begin
+					//compute change of bar pos
+					if(left_i && (bar_pos[0] != 1'b1 )) begin
+						bar_pos <= bar_pos >> 1;
+						
+							if(pos_counter == 9) pos_counter <= 0;
+							else pos_counter <= pos_counter + 1; 
+					end
 
-		
+					if(right_i && (bar_pos[gs-1] != 1'b1)) begin
+						bar_pos <= bar_pos << 1;
+						
+							if(pos_counter == 9) pos_counter <= 0;
+							else pos_counter <= pos_counter + 1; 
+						
+					end
+					
+				// compute drop position
+					if(drop_height == 8'b0) begin//drop has left game	
+						
+						for(integer i=0; i < gs; i = i+1) begin
+							drop_pos[i] <= data_struct[i + gs * pos_counter];
+						end	
+						drop_height <= {1'b1 , {( gs-1) {1'b0}}};
+
+							if(pos_counter == 9) pos_counter <= 0;
+							else pos_counter <= pos_counter + 1;  
+						
+					end else begin //drop still in game
+						if (change_counter == 0) begin
+							drop_height <= drop_height >> 1;
+						end
+						
+						change_counter <= change_counter + 1; //always run change counter through
+					end
+					
+					// check if drop @ player height
+					if (change_counter == 0 && drop_height == 1) begin
+						if(drop_pos != bar_pos) life_counter <= life_counter - 1; // no increase given
+					end
+					
+					//end game if dead
+					if (life_counter == 0) begin
+						dead <= 1'b1;
+					end
+					
+					//create output matrix
+					for (integer i = 0; i < gs; i= i+1) begin
+						for (integer j = 0; j < gs; j= j+1) begin
+							matrix[i*gs + j] <= ((drop_pos[i] && drop_height[j]) || (bar_pos[i] && bar_height[j]));
+						end
+					end
+					
+					d_act <= 1'b1; //always disable after run
+			end else begin
+		// 4th case -> do nothing
+				if(pos_counter == 9) pos_counter <= 0;
+				else pos_counter <= pos_counter + 1; 
+			end
+			
 		end
-
-		
-	
 	end
-
-
-
-
-
-
-	
-	
-
+	end
 
 endmodule // display
 
 `endif
+`default_nettype wire

@@ -56,19 +56,22 @@ module tb ();
 		$dumpvars;
 
 		/* verilator lint_off STMTDLY */
-		#20000 ena = 1'b1;
-		#20000 rst_n = 1'b0 ; // deassert reset
-		#500000 rst_n = 1'b1;
-		#3000000 ui_in = 8'b0000_0010 ;//down
-		#3000000 ui_in = 8'b0000_0001 ;//up
-		#3000000 ui_in = 8'b0000_0010 ;//up
-		#3000000 ui_in = 8'b0000_0010 ;//up
-		#3000000 ui_in = 8'b0000_0001 ;//up
-		#3000000 ui_in = 8'b0000_0001 ;//up
-		#3000000 ui_in = 8'b0000_0010 ;//up
-		#3000000 ui_in = 8'b0000_0000 ;//up
+		#0 rst_n = 0;
+		#0 clk = 0;
 		
-		#45000000 $finish ; // finish
+		#0  clk = 1'b0;
+	    	#0  ena = 1'b1;
+	    	#0  ui_in = {{(8) {1'b0}}};
+		
+		#15 rst_n = 1;
+		
+		#2000 ui_in= { {( 8-2) {1'b0}}, 1'b1 ,1'b0}; 
+		#2000 ui_in = { {( 8-2) {1'b0}}, 1'b0 ,1'b1};
+		#2000 ui_in= { {( 8-2) {1'b0}}, 1'b1 ,1'b0}; 
+		#2000 ui_in = { {( 8-2) {1'b0}}, 1'b0 ,1'b1};
+		
+		#800000 $finish ; // finish
+		
 		/* verilator lint_on STMTDLY */
 	end
 

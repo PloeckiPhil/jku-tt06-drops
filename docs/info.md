@@ -9,12 +9,12 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+Its an arcade style game, plug 2 button and an 8x8 display on the other side and it will display.
 
 ## How to test
 
-Explain how to use your project
+Second thing to consider
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+Here i use lots of components
