@@ -26,11 +26,11 @@ pinout:
   ui[0]: "push button - right"
   ui[1]: "push button - left"
   ui[2]: "push button - reset"
-  ui[3]: "None"
-  ui[4]: "None"
-  ui[5]: "None"
-  ui[6]: "None"
-  ui[7]: "None"
+  ui[3]: ""
+  ui[4]: ""
+  ui[5]: ""
+  ui[6]: ""
+  ui[7]: ""
 
   # Outputs
   uo[0]: "display column 0"
