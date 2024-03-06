@@ -1,3 +1,5 @@
+`define __TT_UM_DROPS__
+
 `default_nettype none 
 
 `include "../src/get_input.v"
