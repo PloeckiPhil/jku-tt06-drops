@@ -1,3 +1,4 @@
+`ifndef __TT_UM_DROPS__
 `define __TT_UM_DROPS__
 
 `default_nettype none 
@@ -148,3 +149,5 @@ module tt_um_drops
     end
 
 endmodule
+
+`endif
