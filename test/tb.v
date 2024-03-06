@@ -1,4 +1,4 @@
-`default_nettype none `timescale 100ns / 100ps
+`default_nettype none `timescale 100ns / 1ns
 
 /* This testbench just instantiates the module and makes some convenient wires
    that can be driven / tested by the cocotb test.py.
@@ -56,14 +56,14 @@ module tb ();
 		$dumpvars;
 
 		/* verilator lint_off STMTDLY */
-		#0 rst_n = 0;
 		#0 clk = 0;
 		
-		#0  clk = 1'b0;
-	    	#0  ena = 1'b1;
+	    	#20000  ena = 1'b1;
+	    	
 	    	#0  ui_in = {{(8) {1'b0}}};
 		
-		#15 rst_n = 1;
+		#20000 rst_n = 1'b0;
+		#500000 rst_n = 1'b1;
 		
 		#2000 ui_in= { {( 8-2) {1'b0}}, 1'b1 ,1'b0}; 
 		#2000 ui_in = { {( 8-2) {1'b0}}, 1'b0 ,1'b1};

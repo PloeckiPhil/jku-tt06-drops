@@ -47,7 +47,8 @@ module action
 	reg dead; //if true -> game over
 
 	reg d_act; //used to disbale 
-	
+	integer i = 0;
+	integer j = 0;
 	
 	//assign outputs to storages
 	assign d_act_o = d_act;
@@ -69,8 +70,8 @@ module action
 
 			// --> display only diagonal
 			//matrix <= {(gs*gs) {1'b0}};
-			for (integer i = 0; i < gs; i= i+1) begin
-					for (integer j = 0; j < gs; j= j+1) begin
+			for (i = 0; i < gs; i= i+1) begin
+					for (j = 0; j < gs; j= j+1) begin
 						if( i == j) matrix[i*gs + j] <= 1'b1;
 						else matrix[i*gs + j] <= 1'b0;
 					end
@@ -80,8 +81,8 @@ module action
 		// 2nd case: dead
 			if (dead == 1'b1) begin
 				//Send a cross to the output screen
-				for (integer i = 0; i < gs; i= i+1) begin
-					for (integer j = 0; j < gs; j= j+1) begin
+				for (i = 0; i < gs; i= i+1) begin
+					for (j = 0; j < gs; j= j+1) begin
 						if( i == j) matrix[i*gs + j] <= 1'b1;
 						else if((gs-1-i) == j) matrix[i*gs + j] <= 1'b1;
 						else matrix[i*gs + j] <= 1'b0;
@@ -109,7 +110,7 @@ module action
 				// compute drop position
 					if(drop_height == 8'b0) begin//drop has left game	
 						
-						for(integer i=0; i < gs; i = i+1) begin
+						for(i=0; i < gs; i = i+1) begin
 							drop_pos[i] <= data_struct[i + gs * pos_counter];
 						end	
 						drop_height <= {1'b1 , {( gs-1) {1'b0}}};
@@ -136,8 +137,8 @@ module action
 					end
 					
 					//create output matrix
-					for (integer i = 0; i < gs; i= i+1) begin
-						for (integer j = 0; j < gs; j= j+1) begin
+					for (i = 0; i < gs; i= i+1) begin
+						for (j = 0; j < gs; j= j+1) begin
 							matrix[i*gs + j] <= ((drop_pos[i] && drop_height[j]) || (bar_pos[i] && bar_height[j]));
 						end
 					end
