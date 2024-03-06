@@ -1,10 +1,12 @@
-`default_nettype none `timescale 100ns / 1ns
+`default_nettype none `timescale 100ns / 100ps
 
 /* This testbench just instantiates the module and makes some convenient wires
    that can be driven / tested by the cocotb test.py.
-*/
 
-`include "../src/tt_um_drops.v"
+`ifndef DGL_TEST
+	`include "../src/tt_um_flappy_bird.v"
+`endif
+*/
 module tb ();
 
   // Dump the signals to a VCD file. You can view it with gtkwave.
@@ -26,8 +28,8 @@ module tb ();
   wire [7:0] uio_oe;
 
   // Replace tt_um_example with your module name:
-  tt_um_drops
-  	tt_um_drops_dut(
+  tt_um_flappy_bird 
+  	tt_um_flappy_bird_dut(
 
 	    // Include power ports for the Gate Level test:
 `ifdef GL_TEST
@@ -52,26 +54,23 @@ module tb ();
 	/* verilator lint_on STMTDLY */
 
 	initial begin
-		$dumpfile("tt_um_drops_tb.vcd");
+		$dumpfile("tt_um_flappy_bird_tb.vcd");
 		$dumpvars;
 
 		/* verilator lint_off STMTDLY */
-		#0 clk = 0;
-		
-	    	#20000  ena = 1'b1;
-	    	
-	    	#0  ui_in = {{(8) {1'b0}}};
-		
-		#20000 rst_n = 1'b0;
+		#20000 ena = 1'b1;
+		#20000 rst_n = 1'b0 ; // deassert reset
 		#500000 rst_n = 1'b1;
+		#3000000 ui_in = 8'b0000_0010 ;//down
+		#3000000 ui_in = 8'b0000_0001 ;//up
+		#3000000 ui_in = 8'b0000_0010 ;//up
+		#3000000 ui_in = 8'b0000_0010 ;//up
+		#3000000 ui_in = 8'b0000_0001 ;//up
+		#3000000 ui_in = 8'b0000_0001 ;//up
+		#3000000 ui_in = 8'b0000_0010 ;//up
+		#3000000 ui_in = 8'b0000_0000 ;//up
 		
-		#2000 ui_in= { {( 8-2) {1'b0}}, 1'b1 ,1'b0}; 
-		#2000 ui_in = { {( 8-2) {1'b0}}, 1'b0 ,1'b1};
-		#2000 ui_in= { {( 8-2) {1'b0}}, 1'b1 ,1'b0}; 
-		#2000 ui_in = { {( 8-2) {1'b0}}, 1'b0 ,1'b1};
-		
-		#800000 $finish ; // finish
-		
+		#45000000 $finish ; // finish
 		/* verilator lint_on STMTDLY */
 	end
 
